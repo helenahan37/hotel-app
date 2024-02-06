@@ -1,11 +1,15 @@
 <h2>Reservation List</h2>
 
-<ul>
+<ul *ngIf="reservations.length; else noReservation">
   <li *ngFor="let reservation of reservations">
     Guest: {{ reservation.guestName }}<br />
     Email: {{ reservation.guestEmail }}<br />
-    Room Number: {{ reservation.roomNumber }}<br />
+    Room No.: {{ reservation.roomNumber }}<br />
     Check-In Date: {{ reservation.checkInDate }}<br />
     Check-Out Date: {{ reservation.checkOutDate }}<br />
   </li>
 </ul>
+
+<ng-template #noReservation>
+  <p>No reservation available</p>
+</ng-template>
