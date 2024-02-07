@@ -1,15 +1,22 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { Reservation } from '../models/reservation';
-
 @Injectable({
   providedIn: 'root',
 })
 export class ReservationService {
   private reservations: Reservation[] = [];
+  private isBrowser: boolean;
 
-  constructor() {
-    let savedReservations = localStorage.getItem('reservations');
-    this.reservations = savedReservations ? JSON.parse(savedReservations) : [];
+  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
+    this.isBrowser = isPlatformBrowser(platformId);
+
+    if (this.isBrowser) {
+      let savedReservations = localStorage.getItem('reservations');
+      this.reservations = savedReservations
+        ? JSON.parse(savedReservations)
+        : [];
+    }
   }
 
   //get all reservations
@@ -24,6 +31,7 @@ export class ReservationService {
 
   //add new reservation
   addReservation(reservation: Reservation): void {
+    reservation.id = Date.now().toString();
     this.reservations.push(reservation);
     localStorage.setItem('reservations', JSON.stringify(this.reservations));
   }
